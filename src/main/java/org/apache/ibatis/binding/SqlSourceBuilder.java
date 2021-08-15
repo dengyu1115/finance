@@ -120,14 +120,14 @@ public class SqlSourceBuilder {
     }
 
     private SqlSource sqlSourceBatchSave(String table, List<Field> fields) {
-        String mainText = this.textInsert(table, "insert", fields);
+        String mainText = this.textInsert(table, INSERT, fields);
         String subText = this.textList(fields);
         MixedSqlNode sqlNode = this.getMixedSqlNode(mainText, subText, LIST, NULL, NULL);
         return new DynamicSqlSource(configuration, sqlNode);
     }
 
     private SqlSource sqlSourceBatchMerge(String table, List<Field> fields) {
-        String mainText = this.textInsert(table, "replace", fields);
+        String mainText = this.textInsert(table, REPLACE, fields);
         String subText = this.textList(fields);
         MixedSqlNode sqlNode = this.getMixedSqlNode(mainText, subText, LIST, NULL, NULL);
         return new DynamicSqlSource(configuration, sqlNode);
@@ -256,8 +256,9 @@ public class SqlSourceBuilder {
     private ResultMap genResultMap(String id, Class<?> type, List<Field> fields) {
         List<ResultMapping> resultMappings = new ArrayList<>();
         for (Field field : fields) {
+            String column = this.getColumn(field).replace("`", "");
             ResultMapping mapping = new ResultMapping
-                    .Builder(configuration, field.getName(), this.getColumn(field), field.getType()).build();
+                    .Builder(configuration, field.getName(), column, field.getType()).build();
             resultMappings.add(mapping);
         }
         return new ResultMap.Builder(configuration, id + ".ResultMap", type, resultMappings).build();
