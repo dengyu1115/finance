@@ -1,5 +1,6 @@
 package com.nature.finance.controller;
 
+import com.nature.common.aop.annotation.Web;
 import com.nature.common.model.Req;
 import com.nature.common.model.Res;
 import com.nature.finance.manager.QuotaManager;
@@ -17,6 +18,7 @@ public class QuotaController {
     @Autowired
     private QuotaManager quotaManager;
 
+    @Web
     @PostMapping("loadByCode")
     public Res<Integer> loadByCode(@RequestBody Req<String> req) {
         String code = req.getData();
